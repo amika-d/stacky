@@ -122,6 +122,7 @@ inngest.createFunction(
                   const content = await sandbox.files.read(file);
                   contents.push({path:file, content})
                 }
+                return contents
               }catch (e){
                 return "Error" + e
               }
@@ -137,7 +138,7 @@ inngest.createFunction(
         onResponse: async({result, network}) => {
           const lastAssistantMessageText = lastAssistantTextMessageContent(result);
           if (lastAssistantMessageText && network) {
-            if (lastAssistantMessageText.includes("<tast_summary>")){
+            if (lastAssistantMessageText.includes("<task_summary>")){
               network.state.data.summary = lastAssistantMessageText;
             }
           }
@@ -176,6 +177,7 @@ inngest.createFunction(
       if (isError){
         return await prisma.message.create({
           data: {
+            projectId: event.data.projectId,
             content: "Something went wrong. Please Try again later",
             role: "ASSISTANT",
             type: "ERROR"
@@ -185,6 +187,7 @@ inngest.createFunction(
 
       return await prisma.message.create({
         data: {
+          projectId: event.data.projectId,
           content: result.state.data.summary,
           role: "ASSISTANT",
           type: "RESULT",
