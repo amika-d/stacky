@@ -16,7 +16,7 @@ export default function Page() {
   const [value, setValue] = useState("");
 
   const trpc = useTRPC();
-  const { data: messages } = useQuery(trpc.messages.getMany.queryOptions());
+  // const { data: messages } = useQuery(trpc.messages.getMany.queryOptions());
   const createProject = useMutation(
     trpc.projects.create.mutationOptions({
       onError: (error) => {
